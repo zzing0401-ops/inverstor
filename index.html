@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V11</title>
+        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V12</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; --border-color: #e2e8f0; --primary: #3b82f6; --success-bg: #dcfce7; --success-text: #166534; --fail-bg: #fee2e2; --fail-text: #991b1b; --wait-bg: #f1f5f9; --wait-text: #475569; }
@@ -53,7 +53,6 @@
             .tab-content { display: block !important; }
             .bottom-nav { display: none !important; }
             
-            /* V10 Filter Buttons */
             .filter-btn-group { display:flex; gap:5px; position:absolute; top:12px; right:15px; }
             .filter-btn { background:var(--wait-bg); border:1px solid var(--border-color); color:var(--text-sub); padding:4px 8px; font-size:11px; border-radius:4px; cursor:pointer; font-weight:bold; transition:0.2s; }
             .filter-btn:hover { filter:brightness(0.95); }
@@ -120,7 +119,7 @@
             <header>
                 <div>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800;">🚀 실전 AI 퀀트 운용 관제 센터</h1>
-                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V11</div>
+                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V12</div>
                 </div>
                 <div class="header-actions">
                     <button onclick="exportToCSV()">📥 CSV 다운로드</button>
@@ -260,6 +259,7 @@
                             <tr>
                                 <th>매도 일자</th>
                                 <th>종목명</th>
+                                <th>보유 기간</th>
                                 <th>매도 수량</th>
                                 <th>매수 단가 (USD/KRW)</th>
                                 <th>매도 단가 (USD/KRW)</th>
@@ -272,6 +272,7 @@
         <tr>
             <td>2026-09-10</td>
             <td><span class='badge badge-wait'>💲 USD</span> <strong>SMR</strong></td>
+            <td><span style='color:var(--text-sub);'>-</span></td>
             <td>300주</td>
             <td>9.47</td>
             <td>10.78</td>
@@ -7742,7 +7743,6 @@
                 window.addEventListener('resize', handleResize);
             };
             
-            // 💡 [V11 정수화] 차트 초기화 및 필터 기능 JS
             function initMainAssetChart() {
                 const ctx = document.getElementById('mainAssetChart');
                 mainAssetChart = new Chart(ctx, {
@@ -7770,7 +7770,6 @@
                 [...filteredData].reverse().forEach(r => {
                     let pnlColor = r.total_pnl >= 0 ? "#10b981" : "#ef4444";
                     let sign = r.total_pnl > 0 ? "+" : "";
-                    // 소수점 완벽 제거
                     let evalStr = Math.round(r.total_eval).toLocaleString('ko-KR');
                     let pnlStr = Math.round(r.total_pnl).toLocaleString('ko-KR');
                     tbody.innerHTML += `<tr><td><strong>${r.date}</strong></td><td><strong style='color:#3b82f6;'>${evalStr}원</strong></td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${pnlStr}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.total_pnl_pct.toFixed(2)}%</td><td style='font-size:11px; color:var(--text-sub);'>${r.details}</td></tr>`;
