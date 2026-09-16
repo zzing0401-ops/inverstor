@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V16</title>
+        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V17</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; --border-color: #e2e8f0; --primary: #3b82f6; --success-bg: #dcfce7; --success-text: #166534; --fail-bg: #fee2e2; --fail-text: #991b1b; --wait-bg: #f1f5f9; --wait-text: #475569; }
@@ -32,7 +32,8 @@
             .table-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow-x: auto; margin-bottom: 25px; -webkit-overflow-scrolling: touch; }
             table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
             th, td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
-            th { background-color: var(--wait-bg); color: var(--text-sub); font-weight: 600; cursor: pointer; position: sticky; top: 0; z-index: 10; white-space: nowrap; }
+            th { background-color: var(--wait-bg); color: var(--text-sub); font-weight: 600; cursor: pointer; position: sticky; top: 0; z-index: 10; white-space: nowrap; transition: background 0.2s; }
+            th:hover { background-color: var(--border-color); color: var(--text-main); } /* 💡 헤더 호버 효과 추가 */
             
             .pin-btn { cursor: pointer; color: #cbd5e1; font-size: 18px; user-select: none; } .pin-btn.active { color: #fbbf24; }
             .tag { background: #e0f2fe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px; display: inline-block; font-weight: 600; margin-top: 3px; }
@@ -121,13 +122,18 @@
             const intFmt = new Intl.NumberFormat('ko-KR');
             const floatFmt = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             function formatNumber(num) { return Number.isInteger(num) ? intFmt.format(num) : floatFmt.format(num); }
+
+            // 💡 [V17] 정렬 상태 추적 전역 변수
+            let currentSortCol = 'sell_date';
+            let currentSortDir = -1; // -1: 내림차순, 1: 오름차순
+            let currentFilterType = 'all';
         </script>
 
         <div class="container">
             <header>
                 <div>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800;">🚀 실전 AI 퀀트 운용 관제 센터</h1>
-                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V16</div>
+                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V17</div>
                 </div>
                 <div class="header-actions">
                     <button onclick="exportToCSV()">📥 CSV 다운로드</button>
@@ -292,17 +298,18 @@
                 </div>
 
                 <div class="table-container">
-                    <table>
+                    <table id="realizedTable">
                         <thead>
+                            <!-- 💡 [V17] 헤더 클릭 시 동적 정렬 함수 호출 -->
                             <tr>
-                                <th>매도 일자</th>
+                                <th id="th_sell_date" onclick="sortRealized('sell_date')" title="클릭하여 날짜별 정렬">매도 일자 ▼</th>
                                 <th>종목명</th>
-                                <th>보유 기간</th>
+                                <th id="th_hold_days" onclick="sortRealized('hold_days')" title="클릭하여 기간별 정렬">보유 기간 ↕</th>
                                 <th>매도 수량</th>
-                                <th>매수 단가 (USD/KRW)</th>
-                                <th>매도 단가 (USD/KRW)</th>
-                                <th>확정 수익금(원)</th>
-                                <th>수익률</th>
+                                <th>매수 단가</th>
+                                <th>매도 단가</th>
+                                <th id="th_realized_profit" onclick="sortRealized('realized_profit')" title="클릭하여 금액별 정렬">확정 수익금 ↕</th>
+                                <th id="th_return_pct" onclick="sortRealized('return_pct')" title="클릭하여 수익률별 정렬">수익률 ↕</th>
                             </tr>
                         </thead>
                         <tbody id="realizedTableBody">
@@ -312,7 +319,6 @@
                 </div>
             </div>
 
-            <!-- 💡 [V16] 무거운 차트 4개 모두 삭제, 핵심 스탯 창만 남김 -->
             <div id="tab-stats" class="tab-content">
                 <div class="section-title">📊 AI 퀀트 성과 핵심 지표</div>
                 <div class="stats-row" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;">
@@ -328,7 +334,6 @@
             <div id="tab-timeline" class="tab-content">
                 <div class="section-title">📝 AI 예측 오답노트 및 상세 내역</div>
                 
-                <!-- 💡 [V16] 버튼을 눌러야만 수백 개의 표를 그리도록 변경 (초기 로딩 렉 원천 차단) -->
                 <div id="predPlaceholder" style="text-align:center; padding: 60px 20px; background:var(--card-bg); border-radius:12px; border:1px solid var(--border-color); margin-bottom:20px;">
                     <h3 style="margin-top:0; color:var(--text-sub);">데이터가 안전하게 대기 중입니다.</h3>
                     <p style="color:var(--text-sub); font-size:13px; margin-bottom:20px;">수백 건의 예측 데이터를 미리 불러오면 기기가 느려질 수 있습니다.</p>
@@ -373,7 +378,6 @@
                                 </tr>
                             </thead>
                             <tbody id="predTableBody">
-                                <!-- JS로 클릭 시 동적 렌더링됨 -->
                             </tbody>
                         </table>
                     </div>
@@ -420,7 +424,6 @@
                 initMainAssetChart();
                 updateHistChart(0, document.querySelector('.filter-btn.active'));
                 
-                // 첫 로딩 시 비동기로 필터링 실행
                 setTimeout(() => {
                     filterRealized('all', document.getElementById('btnFilterAll'));
                 }, 100);
@@ -433,20 +436,41 @@
                     opt.value = t; opt.innerText = t; tagSelect.appendChild(opt);
                 });
 
-                // 로딩 즉시 스탯(승률 등)만 계산하여 보여줌
                 calculateAndRenderStatsOnly();
-                
                 window.addEventListener('resize', handleResize);
             };
 
-            // 💡 [V16] 사용자가 버튼을 눌렀을 때만 예측 표를 통째로 그림
             function loadPredictions() {
                 document.getElementById('predPlaceholder').style.display = 'none';
                 document.getElementById('predTableContainer').style.display = 'block';
-                applyFilters(); // 필터를 거쳐서 표를 그림
+                applyFilters();
+            }
+
+            // 💡 [V17] 테이블 정렬 함수
+            function sortRealized(col) {
+                if (currentSortCol === col) {
+                    currentSortDir *= -1; // 클릭 시 방향 반전
+                } else {
+                    currentSortCol = col;
+                    currentSortDir = -1; // 새 컬럼 누르면 기본은 내림차순
+                }
+                
+                // 테이블 헤더 화살표 UI 업데이트
+                document.querySelectorAll('#realizedTable thead th').forEach(th => {
+                    th.innerText = th.innerText.replace(' ▲', '').replace(' ▼', '').replace(' ↕', ' ↕');
+                });
+                let activeTh = document.getElementById('th_' + col);
+                if(activeTh) {
+                    activeTh.innerText = activeTh.innerText.replace(' ↕', '') + (currentSortDir === 1 ? ' ▲' : ' ▼');
+                }
+                
+                // 기존 데이터 필터링 후 정렬
+                filterRealized(currentFilterType, null, true);
             }
             
-            function filterRealized(type, btnElement) {
+            function filterRealized(type, btnElement, isSort=false) {
+                if (!isSort) currentFilterType = type; // 정렬 버튼을 누른 게 아니면 현재 필터 타입 저장
+
                 if(btnElement) {
                     document.querySelectorAll('.realized-filters .filter-btn').forEach(b => b.classList.remove('active'));
                     btnElement.classList.add('active');
@@ -482,9 +506,18 @@
                         document.getElementById('endDate').value = end;
                     }
 
-                    let filtered = realizedDataRaw;
+                    let filtered = [...realizedDataRaw]; // 원본 복사
                     if(start) filtered = filtered.filter(d => d.sell_date >= start);
                     if(end) filtered = filtered.filter(d => d.sell_date <= end);
+
+                    // 💡 [V17] 데이터 정렬 로직 적용
+                    filtered.sort((a, b) => {
+                        let valA = a[currentSortCol];
+                        let valB = b[currentSortCol];
+                        if (valA < valB) return -1 * currentSortDir;
+                        if (valA > valB) return 1 * currentSortDir;
+                        return 0;
+                    });
 
                     let tbody = document.getElementById('realizedTableBody');
                     let totalRetrieved = 0;
@@ -574,31 +607,24 @@
 
             function switchTab(tabId, btn) {
                 if(window.innerWidth > 900) return; 
-                
                 document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                
                 document.getElementById(tabId).classList.add('active');
                 btn.classList.add('active');
             }
 
             function handleResize() {
-                if(window.innerWidth > 900) {
-                    document.querySelectorAll('.tab-content').forEach(t => t.style.display = ''); 
-                }
+                if(window.innerWidth > 900) document.querySelectorAll('.tab-content').forEach(t => t.style.display = ''); 
             }
 
             function toggleTheme() { 
                 document.body.classList.toggle("dark-mode"); 
-                let isDark = document.body.classList.contains('dark-mode');
-                safeSetStore('theme', isDark ? 'dark' : 'light');
+                safeSetStore('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
                 updateThemeBtnText();
             }
             
             function updateThemeBtnText() {
-                let btn = document.getElementById("themeBtn");
-                if(document.body.classList.contains('dark-mode')) btn.innerText = "☀️ 라이트모드";
-                else btn.innerText = "🌙 다크모드";
+                document.getElementById("themeBtn").innerText = document.body.classList.contains('dark-mode') ? "☀️ 라이트모드" : "🌙 다크모드";
             }
 
             let searchTimeout = null;
@@ -607,8 +633,6 @@
                 searchTimeout = setTimeout(() => { applyFilters(); }, 300);
             }
 
-            // 💡 [V16] 화면의 <tr> DOM을 읽어오는 구형 방식 완전 폐기!
-            // 순수 JSON 배열만 읽어서 초고속으로 계산하고 화면에 쏴줍니다.
             function calculateAndRenderStatsOnly() {
                 let sCnt=0, fCnt=0, waitCnt=0, sumProfit=0, sumLoss=0, currStreakW=0, maxStreakW=0, currStreakL=0, maxStreakL=0;
                 let peakEq = 10000000, currEq = 10000000, mdd = 0;
@@ -616,7 +640,6 @@
                 for(let i=0; i<rawData.length; i++) {
                     let d = rawData[i];
                     if(d.result === '대기') { waitCnt++; continue; }
-                    
                     let actualPct = Math.abs(d.change_pct_val);
                     if(d.result === '성공') {
                         sCnt++; sumProfit += actualPct; currStreakW++; currStreakL=0; 
@@ -642,7 +665,7 @@
             }
 
             function applyFilters() {
-                if (document.getElementById('predTableContainer').style.display === 'none') return; // 안 보일 땐 렌더링 스킵
+                if (document.getElementById('predTableContainer').style.display === 'none') return;
 
                 const searchText = document.getElementById("searchInput").value.toUpperCase();
                 const statusVal = document.getElementById("statusFilter").value;
