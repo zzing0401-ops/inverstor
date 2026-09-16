@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V14.2</title>
+        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V15</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; --border-color: #e2e8f0; --primary: #3b82f6; --success-bg: #dcfce7; --success-text: #166534; --fail-bg: #fee2e2; --fail-text: #991b1b; --wait-bg: #f1f5f9; --wait-text: #475569; }
@@ -121,7 +121,7 @@
             
             let equityChart, heatmapChart, confChart, tagChart, mainAssetChart;
             
-            // 💡 [V14.2 최적화] 콤마 연산 캐싱
+            // 💡 [V15] 초고속 콤마 포맷터 캐싱
             const intFmt = new Intl.NumberFormat('ko-KR');
             const floatFmt = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             function formatNumber(num) { return Number.isInteger(num) ? intFmt.format(num) : floatFmt.format(num); }
@@ -131,7 +131,7 @@
             <header>
                 <div>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800;">🚀 실전 AI 퀀트 운용 관제 센터</h1>
-                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V14.2</div>
+                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V15</div>
                 </div>
                 <div class="header-actions">
                     <button onclick="exportToCSV()">📥 CSV 다운로드</button>
@@ -260,11 +260,12 @@
             </div>
 
             <div id="tab-realized" class="tab-content">
-                <div class="section-title" style="margin-bottom: 15px;">💰 누적 실현 손익 & 매매 일지</div>
+                <div class="section-title" style="margin-bottom: 15px;">💰 누적 실현 손익 & 퀀트 분석</div>
                 
                 <div class="controls-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 12px 15px; margin-bottom: 20px;">
                     <div class="realized-filters">
                         <button class="filter-btn" onclick="filterRealized('day', this)">오늘(일)</button>
+                        <button class="filter-btn" onclick="filterRealized('week', this)">이번주(주)</button>
                         <button class="filter-btn" onclick="filterRealized('month', this)">이번달(월)</button>
                         <button class="filter-btn" onclick="filterRealized('year', this)">올해(년)</button>
                         <button class="filter-btn active" id="btnFilterAll" onclick="filterRealized('all', this)">전체 기간</button>
@@ -275,9 +276,24 @@
                     </div>
                 </div>
 
-                <div class="stat-card" style="max-width:320px; margin-bottom:20px; border-color:var(--primary); background:rgba(59, 130, 246, 0.05);">
-                    <h3 style="color:var(--primary);">선택 기간 총 실현(확정) 수익금</h3>
-                    <div class="value" id="totalRealizedProfit" style="font-size:28px;">0원</div>
+                <!-- 💡 [V15] 4대 핵심 지표 (투자금, 회수금, 수익금, 수익률) 패널 추가 -->
+                <div class="port-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+                    <div class="stat-card">
+                        <h3>선택 기간 총 투자 원금</h3>
+                        <div class="value" id="statPrincipal" style="color:var(--text-main);">0원</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>선택 기간 총 매도 회수금</h3>
+                        <div class="value" id="statRetrieved" style="color:#3b82f6;">0원</div>
+                    </div>
+                    <div class="stat-card" style="border-color:var(--primary); background:rgba(59, 130, 246, 0.03);">
+                        <h3 style="color:var(--primary);">확정 수익금</h3>
+                        <div class="value" id="statProfit">0원</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>기간 수익률 (ROI)</h3>
+                        <div class="value" id="statROI">0%</div>
+                    </div>
                 </div>
 
                 <div class="table-container">
@@ -8759,10 +8775,7 @@
                 initMainAssetChart();
                 updateHistChart(0, document.querySelector('.filter-btn.active'));
                 
-                // 첫 로딩 시 비동기로 필터링 실행
-                setTimeout(() => {
-                    filterRealized('all', document.getElementById('btnFilterAll'));
-                }, 100);
+                filterRealized('all', document.getElementById('btnFilterAll'));
 
                 let allTags = new Set();
                 rawData.forEach(d => d.tags.forEach(t => allTags.add(t)));
@@ -8784,81 +8797,96 @@
                 window.addEventListener('resize', handleResize);
             };
             
-            // 💡 [V14.2 최적화] 비동기(setTimeout)를 이용한 논블로킹 필터 렌더링
+            // 💡 [V15 초고속 & 4대 스탯 연산] 
             function filterRealized(type, btnElement) {
                 if(btnElement) {
                     document.querySelectorAll('.realized-filters .filter-btn').forEach(b => b.classList.remove('active'));
                     btnElement.classList.add('active');
                 }
                 
-                // 버튼 UI가 먼저 바뀌게 한 뒤, 50ms 후 무거운 DOM 렌더링 실행
-                setTimeout(() => {
-                    let today = new Date();
-                    let start = '';
-                    let end = '';
-                    const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                let today = new Date();
+                let start = '';
+                let end = '';
+                const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 
-                    if (type === 'day') {
-                        start = fmt(today); end = fmt(today);
-                    } else if (type === 'month') {
-                        start = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-01';
-                        let lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                        end = fmt(lastDay);
-                    } else if (type === 'year') {
-                        start = today.getFullYear() + '-01-01';
-                        end = today.getFullYear() + '-12-31';
-                    } else if (type === 'custom') {
-                        start = document.getElementById('startDate').value;
-                        end = document.getElementById('endDate').value;
-                    }
+                if (type === 'day') {
+                    start = fmt(today); end = fmt(today);
+                } else if (type === 'week') {
+                    let d = new Date(today);
+                    let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                    start = fmt(new Date(d.setDate(diff)));
+                    end = fmt(today);
+                } else if (type === 'month') {
+                    start = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-01';
+                    end = fmt(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+                } else if (type === 'year') {
+                    start = today.getFullYear() + '-01-01';
+                    end = today.getFullYear() + '-12-31';
+                } else if (type === 'custom') {
+                    start = document.getElementById('startDate').value;
+                    end = document.getElementById('endDate').value;
+                }
 
-                    if (type !== 'custom') {
-                        document.getElementById('startDate').value = start;
-                        document.getElementById('endDate').value = end;
-                    }
+                if (type !== 'custom') {
+                    document.getElementById('startDate').value = start;
+                    document.getElementById('endDate').value = end;
+                }
 
-                    let filtered = realizedDataRaw;
-                    if(start) filtered = filtered.filter(d => d.sell_date >= start);
-                    if(end) filtered = filtered.filter(d => d.sell_date <= end);
+                let filtered = realizedDataRaw;
+                if(start) filtered = filtered.filter(d => d.sell_date >= start);
+                if(end) filtered = filtered.filter(d => d.sell_date <= end);
 
-                    let tbody = document.getElementById('realizedTableBody');
-                    let total = 0;
-                    let htmlArr = [];
+                let totalRetrieved = 0;
+                let totalProfit = 0;
+                let htmlStr = '';
 
-                    for(let i=0; i<filtered.length; i++) {
-                        let r = filtered[i];
-                        total += r.realized_profit;
-                        let pnlColor = r.realized_profit >= 0 ? "#10b981" : "#ef4444";
-                        let sign = r.realized_profit > 0 ? "+" : "";
-                        let cb = r.currency === 'USD' ? "💲 USD" : "₩ KRW";
-                        let hold = r.hold_days > 0 ? "<strong>" + r.hold_days + "일</strong>" : "<span style='color:var(--text-sub);'>-</span>";
-                        
-                        let buyStr = formatNumber(r.buy_price);
-                        let sellStr = formatNumber(r.sell_price);
-                        
-                        htmlArr.push(`<tr>
-                            <td>${r.sell_date}</td>
-                            <td><span class='badge badge-wait'>${cb}</span> <strong>${r.stock}</strong></td>
-                            <td>${hold}</td>
-                            <td>${intFmt.format(r.sell_qty)}주</td>
-                            <td>${buyStr}</td>
-                            <td>${sellStr}</td>
-                            <td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.realized_profit))}원</td>
-                            <td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.return_pct.toFixed(2)}%</td>
-                        </tr>`);
-                    }
-
-                    if (filtered.length === 0) {
-                        htmlArr.push("<tr><td colspan='8' style='text-align:center; padding:30px; color:var(--text-sub);'>해당 기간에 조회된 매도 기록이 없습니다.</td></tr>");
-                    }
-
-                    // 화면에 1번만 렌더링 (DOM Thrashing 방지)
-                    tbody.innerHTML = htmlArr.join('');
+                // 배열을 직접 그리지 않고 텍스트 버퍼에 한 번에 담아서 렉 완벽 제거
+                for(let i=0; i<filtered.length; i++) {
+                    let r = filtered[i];
                     
-                    let tColor = total >= 0 ? "#10b981" : "#ef4444";
-                    let tSign = total > 0 ? "+" : "";
-                    document.getElementById('totalRealizedProfit').innerHTML = `<span style="color:${tColor}">${tSign}${intFmt.format(Math.round(total))}원</span>`;
-                }, 50);
+                    // DB수익금을 베이스로 완벽하게 환율 역산 (강달러 환차익 100% 반영)
+                    let fx = r.currency === 'USD' ? r.fx_rate : 1.0;
+                    let retrieved = r.sell_price * r.sell_qty * fx;
+                    let principal = retrieved - r.realized_profit; 
+
+                    totalRetrieved += retrieved;
+                    totalProfit += r.realized_profit;
+
+                    let pnlColor = r.realized_profit >= 0 ? "#10b981" : "#ef4444";
+                    let sign = r.realized_profit > 0 ? "+" : "";
+                    let cb = r.currency === 'USD' ? "💲 USD" : "₩ KRW";
+                    let hold = r.hold_days > 0 ? "<strong>" + r.hold_days + "일</strong>" : "<span style='color:var(--text-sub);'>-</span>";
+                    
+                    htmlStr += `<tr>
+                        <td>${r.sell_date}</td>
+                        <td><span class='badge badge-wait'>${cb}</span> <strong>${r.stock}</strong></td>
+                        <td>${hold}</td>
+                        <td>${intFmt.format(r.sell_qty)}주</td>
+                        <td>${formatNumber(r.buy_price)}</td>
+                        <td>${formatNumber(r.sell_price)}</td>
+                        <td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.realized_profit))}원</td>
+                        <td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.return_pct.toFixed(2)}%</td>
+                    </tr>`;
+                }
+
+                let totalPrincipal = totalRetrieved - totalProfit;
+                let totalROI = totalPrincipal > 0 ? (totalProfit / totalPrincipal * 100) : 0;
+
+                if (filtered.length === 0) {
+                    htmlStr = "<tr><td colspan='8' style='text-align:center; padding:30px; color:var(--text-sub);'>해당 기간에 조회된 매도 기록이 없습니다.</td></tr>";
+                }
+
+                // 화면에 단 1번만 렌더링 (DOM Thrashing 완전 차단)
+                document.getElementById('realizedTableBody').innerHTML = htmlStr;
+                
+                let pColor = totalProfit >= 0 ? "#10b981" : "#ef4444";
+                let pSign = totalProfit > 0 ? "+" : "";
+
+                // 스탯 창 업데이트
+                document.getElementById('statPrincipal').innerHTML = `${intFmt.format(Math.round(totalPrincipal))}원`;
+                document.getElementById('statRetrieved').innerHTML = `${intFmt.format(Math.round(totalRetrieved))}원`;
+                document.getElementById('statProfit').innerHTML = `<span style="color:${pColor}">${pSign}${intFmt.format(Math.round(totalProfit))}원</span>`;
+                document.getElementById('statROI').innerHTML = `<span style="color:${pColor}">${pSign}${totalROI.toFixed(2)}%</span>`;
             }
 
             function initMainAssetChart() {
@@ -8870,34 +8898,28 @@
                 });
             }
 
+            // 💡 [V15 초고속 렌더링] setTimeout 제거하고 즉각 텍스트 렌더링 
             function updateHistChart(days, btnElement) {
                 document.querySelectorAll('.chart-card .filter-btn').forEach(b => b.classList.remove('active'));
                 if(btnElement) btnElement.classList.add('active');
 
-                // 비동기 렌더링
-                setTimeout(() => {
-                    let filteredData = histDataRaw;
-                    if(days > 0 && histDataRaw.length > days) {
-                        filteredData = histDataRaw.slice(histDataRaw.length - days);
-                    }
+                let filteredData = histDataRaw;
+                if(days > 0 && histDataRaw.length > days) {
+                    filteredData = histDataRaw.slice(histDataRaw.length - days);
+                }
 
-                    mainAssetChart.data.labels = filteredData.map(d => d.date.substring(5));
-                    mainAssetChart.data.datasets[0].data = filteredData.map(d => d.total_eval);
-                    mainAssetChart.update();
+                mainAssetChart.data.labels = filteredData.map(d => d.date.substring(5));
+                mainAssetChart.data.datasets[0].data = filteredData.map(d => d.total_eval);
+                mainAssetChart.update();
 
-                    let tbody = document.getElementById('histTableBody');
-                    let htmlArr = [];
-                    let revData = [...filteredData].reverse();
-                    for(let i=0; i<revData.length; i++) {
-                        let r = revData[i];
-                        let pnlColor = r.total_pnl >= 0 ? "#10b981" : "#ef4444";
-                        let sign = r.total_pnl > 0 ? "+" : "";
-                        let evalStr = intFmt.format(Math.round(r.total_eval));
-                        let pnlStr = intFmt.format(Math.round(r.total_pnl));
-                        htmlArr.push(`<tr><td><strong>${r.date}</strong></td><td><strong style='color:#3b82f6;'>${evalStr}원</strong></td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${pnlStr}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.total_pnl_pct.toFixed(2)}%</td><td style='font-size:11px; color:var(--text-sub);'>${r.details}</td></tr>`);
-                    }
-                    tbody.innerHTML = htmlArr.join('');
-                }, 50);
+                let htmlStr = '';
+                for(let i=filteredData.length-1; i>=0; i--) {
+                    let r = filteredData[i];
+                    let pnlColor = r.total_pnl >= 0 ? "#10b981" : "#ef4444";
+                    let sign = r.total_pnl > 0 ? "+" : "";
+                    htmlStr += `<tr><td><strong>${r.date}</strong></td><td><strong style='color:#3b82f6;'>${intFmt.format(Math.round(r.total_eval))}원</strong></td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.total_pnl))}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.total_pnl_pct.toFixed(2)}%</td><td style='font-size:11px; color:var(--text-sub);'>${r.details}</td></tr>`;
+                }
+                document.getElementById('histTableBody').innerHTML = htmlStr;
             }
 
             function switchTab(tabId, btn) {
