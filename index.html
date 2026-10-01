@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V19.3</title>
+        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V19.4</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; --border-color: #e2e8f0; --primary: #3b82f6; --success-bg: #dcfce7; --success-text: #166534; --fail-bg: #fee2e2; --fail-text: #991b1b; --wait-bg: #f1f5f9; --wait-text: #475569; }
@@ -19,6 +19,7 @@
             
             .section-title { font-size: 17px; font-weight: 800; margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px; }
             .port-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px; }
+            .day-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px; }
             .stat-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
             .stat-card h3 { margin: 0; font-size: 13px; color: var(--text-sub); }
             .stat-card .value { margin: 8px 0 0 0; font-size: 22px; font-weight: 700; color: var(--primary); }
@@ -44,8 +45,7 @@
             .badge-success { background: var(--success-bg); color: var(--success-text); } .badge-fail { background: var(--fail-bg); color: var(--fail-text); } .badge-wait { background: var(--wait-bg); color: var(--wait-text); }
             .btn-detail { background: var(--border-color); color: var(--text-main); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
             
-            /* 💡 [V19.3] 인사이트 박스 CSS 추가 */
-            .insight-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+            .insight-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center; }
             .insight-item { border-right: 1px solid var(--border-color); padding-right: 15px; }
             .insight-item:last-child { border-right: none; padding-right: 0; }
             .insight-item h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-sub); }
@@ -99,6 +99,7 @@
                 .nav-btn.active span { filter: none; transform: scale(1.1); }
                 
                 .port-grid, .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+                .day-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
                 .stats-row .stat-card[style*="grid-column: span 2"] { grid-column: span 2 !important; }
                 .stat-card { padding: 12px 8px; }
                 .stat-card h3 { font-size: 11px; }
@@ -143,7 +144,7 @@
             <header>
                 <div>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800;">🚀 실전 AI 퀀트 운용 관제 센터</h1>
-                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V19.3</div>
+                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V19.4</div>
                 </div>
                 <div class="header-actions">
                     <button onclick="exportToCSV()">📥 CSV 다운로드</button>
@@ -435,21 +436,19 @@
                     </div>
                 </div>
 
-                <!-- 💡 [V19.3 핵심] 요일별(월~금) 및 월별 인사이트 분석 바 -->
+                <!-- 💡 [V19.4 핵심] 월~금 전체 요일 분석 패널 -->
+                <div class="section-title" style="margin-top:30px;">📅 요일별 매매 엣지 분석 (월~금)</div>
+                <div class="day-grid" id="dayEdgeGrid">
+                    <!-- JS 연산 후 월~금 5단 카드가 여기에 동적 삽입됩니다 -->
+                </div>
+
+                <!-- 💡 [V19.4 핵심] 월별 통계는 인사이트 박스로 분리 -->
                 <div class="insight-box">
-                    <div class="insight-item">
-                        <h4>📅 최고 승률 요일 (월~금)</h4>
-                        <div class="highlight" id="insightBestDayWin">-</div>
-                    </div>
-                    <div class="insight-item">
-                        <h4>🚀 최고 수익 요일 (월~금)</h4>
-                        <div class="highlight" id="insightBestDayReturn" style="color:#10b981;">-</div>
-                    </div>
                     <div class="insight-item">
                         <h4>🏆 최고 승률 달 (Monthly)</h4>
                         <div class="highlight" id="insightBestMonthWin">-</div>
                     </div>
-                    <div class="insight-item">
+                    <div class="insight-item" style="border-right: none;">
                         <h4>💰 최고 수익금 달 (Monthly)</h4>
                         <div class="highlight" id="insightBestMonthProfit" style="color:#10b981;">-</div>
                     </div>
@@ -778,7 +777,7 @@
                 filterRealized(currentFilterType, null, true);
             }
             
-            // 💡 [V19.3] 실현손익 통계 및 요일/월별 분석 로직 추가
+            // 💡 [V19.3 & V19.4] 실현손익 통계 및 요일/월별 엣지 분석 엔진
             function filterRealized(type, btnElement, isSort=false) {
                 if (!isSort) currentFilterType = type; 
 
@@ -915,16 +914,27 @@
                     let avgLossHold = lossHoldDays.length > 0 ? (lossHoldDays.reduce((a,b)=>a+b,0) / lossHoldDays.length).toFixed(1) : 0;
                     let totalROI = totalPrincipal > 0 ? (totalProfit / totalPrincipal * 100) : 0;
 
-                    let bestDayWin = '-', bestDayWinRate = -1;
-                    let bestDayRet = '-', bestDayAvgRet = -999;
+                    // 💡 [V19.4] 요일별 승률/수익률 바 생성 렌더링
+                    let dayEdgeHtml = '';
                     for (let d = 1; d <= 5; d++) {
+                        let wr = 0, avgR = 0;
                         if (dayStats[d].total > 0) {
-                            let wr = (dayStats[d].wins / dayStats[d].total) * 100;
-                            let avgR = dayStats[d].sumReturn / dayStats[d].total;
-                            if (wr > bestDayWinRate) { bestDayWinRate = wr; bestDayWin = `${dayNames[d]} (${wr.toFixed(1)}%)`; }
-                            if (avgR > bestDayAvgRet) { bestDayAvgRet = avgR; bestDayRet = `${dayNames[d]} (${avgR > 0 ? '+' : ''}${avgR.toFixed(2)}%)`; }
+                            wr = (dayStats[d].wins / dayStats[d].total) * 100;
+                            avgR = dayStats[d].sumReturn / dayStats[d].total;
                         }
+                        let color = avgR >= 0 ? '#10b981' : '#ef4444';
+                        let sign = avgR > 0 ? '+' : '';
+                        let wrColor = wr >= 50 ? '#3b82f6' : '#ef4444';
+                        let opacity = dayStats[d].total === 0 ? 'opacity:0.4;' : '';
+                        
+                        dayEdgeHtml += `
+                        <div class="stat-card" style="${opacity}">
+                            <h3 style="color:var(--text-main); font-weight:bold; margin-bottom: 5px;">${dayNames[d]} <span style="font-size:11px; color:var(--text-sub); font-weight:normal;">(${dayStats[d].total}건)</span></h3>
+                            <div class="value" style="color:${wrColor}; font-size:20px; margin-top:8px;">${wr.toFixed(1)}%</div>
+                            <div style="font-size:13px; color:${color}; font-weight:bold; margin-top:5px;">${sign}${avgR.toFixed(2)}%</div>
+                        </div>`;
                     }
+                    document.getElementById('dayEdgeGrid').innerHTML = dayEdgeHtml;
 
                     let bestMonthWin = '-', bestMonthWinRate = -1;
                     let bestMonthProfit = '-', bestMonthProfitVal = -Infinity;
@@ -954,8 +964,6 @@
                     document.getElementById('statProfit').innerHTML = `<span style="color:${pColor}">${pSign}${intFmt.format(Math.round(totalProfit))}원</span>`;
                     document.getElementById('statROI').innerHTML = `<span style="color:${pColor}">${pSign}${totalROI.toFixed(2)}%</span>`;
 
-                    document.getElementById('insightBestDayWin').innerText = bestDayWin;
-                    document.getElementById('insightBestDayReturn').innerText = bestDayRet;
                     document.getElementById('insightBestMonthWin').innerText = bestMonthWin;
                     document.getElementById('insightBestMonthProfit').innerText = bestMonthProfit;
 
