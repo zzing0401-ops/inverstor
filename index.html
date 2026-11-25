@@ -4,38 +4,39 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V19.4</title>
+        <title>AI 퀀트 주가 예측 타임라인 & 실전 자산 포트폴리오 PRO V19.5</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --text-sub: #64748b; --border-color: #e2e8f0; --primary: #3b82f6; --success-bg: #dcfce7; --success-text: #166534; --fail-bg: #fee2e2; --fail-text: #991b1b; --wait-bg: #f1f5f9; --wait-text: #475569; }
             body.dark-mode { --bg-color: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: #334155; --primary: #60a5fa; --wait-bg: #334155; --wait-text: #cbd5e1; }
             body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; margin: 0; padding: 25px 20px; background-color: var(--bg-color); color: var(--text-main); transition: background-color 0.3s, color 0.3s; -webkit-font-smoothing: antialiased; }
-            
+
             .container { max-width: 1600px; margin: 0 auto; }
             header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
             .header-actions { display: flex; gap: 8px; }
             .header-actions button { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; }
             .header-actions button:hover { filter: brightness(0.95); }
-            
+
             .section-title { font-size: 17px; font-weight: 800; margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px; }
             .port-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px; }
+            .market-charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
             .day-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px; }
             .stat-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
             .stat-card h3 { margin: 0; font-size: 13px; color: var(--text-sub); }
             .stat-card .value { margin: 8px 0 0 0; font-size: 22px; font-weight: 700; color: var(--primary); }
-            
-            .chart-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); height: 260px; display: flex; flex-direction: column; position: relative; }
+
+            .chart-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); height: 280px; display: flex; flex-direction: column; position: relative; }
             .chart-card h3 { margin: 0 0 10px 0; font-size: 14px; font-weight: 700; }
-            
+
             .controls-box { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; gap: 12px; margin-bottom: 15px; }
             .controls-box input, .controls-box select { background: var(--card-bg); color: var(--text-main); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); flex: 1; outline: none; font-size: 13px; }
-            
+
             .table-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow-x: auto; margin-bottom: 25px; -webkit-overflow-scrolling: touch; }
             table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
             th, td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
             th { background-color: var(--wait-bg); color: var(--text-sub); font-weight: 600; cursor: pointer; position: sticky; top: 0; z-index: 10; white-space: nowrap; transition: background 0.2s; }
-            th:hover { background-color: var(--border-color); color: var(--text-main); } 
-            
+            th:hover { background-color: var(--border-color); color: var(--text-main); }
+
             .pin-btn { cursor: pointer; color: #cbd5e1; font-size: 18px; user-select: none; } .pin-btn.active { color: #fbbf24; }
             .tag { background: #e0f2fe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px; display: inline-block; font-weight: 600; margin-top: 3px; }
             body.dark-mode .tag { background: #1e3a8a; color: #bfdbfe; }
@@ -44,7 +45,7 @@
             .badge { padding: 5px 10px; border-radius: 20px; font-weight: 600; font-size: 11px; }
             .badge-success { background: var(--success-bg); color: var(--success-text); } .badge-fail { background: var(--fail-bg); color: var(--fail-text); } .badge-wait { background: var(--wait-bg); color: var(--wait-text); }
             .btn-detail { background: var(--border-color); color: var(--text-main); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
-            
+
             .insight-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center; }
             .insight-item { border-right: 1px solid var(--border-color); padding-right: 15px; }
             .insight-item:last-child { border-right: none; padding-right: 0; }
@@ -59,7 +60,7 @@
 
             .tab-content { display: block !important; }
             .bottom-nav { display: none !important; }
-            
+
             .filter-btn-group { display:flex; gap:5px; position:absolute; top:12px; right:15px; }
             .filter-btn { background:var(--wait-bg); border:1px solid var(--border-color); color:var(--text-sub); padding:4px 8px; font-size:11px; border-radius:4px; cursor:pointer; font-weight:bold; transition:0.2s; }
             .filter-btn:hover { filter:brightness(0.95); }
@@ -71,51 +72,23 @@
             .date-inputs input { padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 12px; background: var(--card-bg); color: var(--text-main); }
 
             @media (max-width: 900px) {
-                body { padding: 15px 10px 85px 10px; } 
+                body { padding: 15px 10px 85px 10px; }
                 header { flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 25px; }
                 header h1 { font-size: 20px !important; }
-                
                 .header-actions { width: 100%; display: flex; gap: 10px; }
-                .header-actions button { flex: 1; padding: 12px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-                
-                .tab-content { display: none !important; animation: fadeIn 0.3s ease; }
+                .header-actions button { flex: 1; padding: 12px; font-size: 14px; }
+                .tab-content { display: none !important; }
                 .tab-content.active { display: block !important; }
-                @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
                 .bottom-nav {
                     display: flex !important; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
                     background: var(--card-bg); border-top: 1px solid var(--border-color);
-                    box-shadow: 0 -4px 15px rgba(0,0,0,0.04); z-index: 10000;
-                    justify-content: space-around; align-items: center;
-                    padding-bottom: env(safe-area-inset-bottom);
+                    z-index: 10000; justify-content: space-around; align-items: center;
                 }
-                .nav-btn {
-                    background: transparent; border: none; flex: 1; height: 100%;
-                    display: flex; flex-direction: column; align-items: center; justify-content: center;
-                    color: var(--text-sub); font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s;
-                }
-                .nav-btn span { font-size: 20px; margin-bottom: 4px; filter: grayscale(100%) opacity(0.6); transition: all 0.2s; }
+                .nav-btn { background: transparent; border: none; flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-sub); font-size: 11px; font-weight: 600; }
                 .nav-btn.active { color: var(--primary); }
-                .nav-btn.active span { filter: none; transform: scale(1.1); }
-                
-                .port-grid, .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+                .port-grid, .stats-row, .market-charts-grid { grid-template-columns: 1fr !important; gap: 10px; }
                 .day-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
-                .stats-row .stat-card[style*="grid-column: span 2"] { grid-column: span 2 !important; }
-                .stat-card { padding: 12px 8px; }
-                .stat-card h3 { font-size: 11px; }
-                .stat-card .value { font-size: 18px; margin-top: 5px; }
-                
-                .chart-card { height: 280px; padding: 12px; }
-                
-                .controls-box { flex-direction: column; gap: 8px; padding: 12px; }
-                .controls-box input, .controls-box select { width: 100%; box-sizing: border-box; font-size: 14px; padding: 12px; }
-                
-                th, td { padding: 10px; font-size: 12px; }
-                .detail-modal-content { width: 92%; padding: 16px; max-height: 85vh; }
-                .filter-btn-group { position:static; margin-bottom:10px; justify-content:flex-end; }
-
-                .insight-box { grid-template-columns: repeat(2, 1fr) !important; }
-                .insight-item { border-right: none; }
+                .insight-box { grid-template-columns: 1fr !important; }
             }
         </style>
     </head>
@@ -124,13 +97,15 @@
             function safeGetStore(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
             function safeSetStore(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
             if(safeGetStore('theme') === 'dark') document.body.classList.add('dark-mode');
-            
+
             const rawData = [];
             const histDataRaw = [];
             const realizedDataRaw = [];
-            const portData = []; 
-            
-            let mainAssetChart;
+            const portData = [];
+            const nfDataRaw = [{"id": 1, "recorded_at": "2026-11-25 22:50", "label": "KOSPI200/선물연계 (22:50)", "index_val": 4697.51, "change_val": 0.0, "change_pct": 0.0}];
+            const supplyDataRaw = [{"id": 1, "recorded_at": "2026-11-25 22:50", "stock": "삼성전자", "price": 170700.0, "foreign_net": 0.0, "inst_net": 0.0, "indiv_net": 0.0, "source": "키움Opt10059"}, {"id": 2, "recorded_at": "2026-11-25 22:50", "stock": "SK하이닉스", "price": 1030000.0, "foreign_net": 0.0, "inst_net": 0.0, "indiv_net": 0.0, "source": "키움Opt10059"}, {"id": 3, "recorded_at": "2026-11-25 22:50", "stock": "한화에어로스페이스", "price": 627000.0, "foreign_net": 0.0, "inst_net": 0.0, "indiv_net": 0.0, "source": "키움Opt10059"}];
+
+            let mainAssetChart, nightFuturesChart, investorFlowChart, stockSupplyChart;
             const intFmt = new Intl.NumberFormat('ko-KR');
             const floatFmt = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             function formatNumber(num) { return Number.isInteger(num) ? intFmt.format(num) : floatFmt.format(num); }
@@ -144,7 +119,7 @@
             <header>
                 <div>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800;">🚀 실전 AI 퀀트 운용 관제 센터</h1>
-                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">최적의 투자 전략 및 실전 포트폴리오 대시보드 PRO V19.4</div>
+                    <div class="subtitle" style="color: var(--text-sub); margin-top: 4px;">실시간 야간선물 · 투자자별 수급 · 일반주식 차트 & 실전 포트폴리오 PRO V19.5</div>
                 </div>
                 <div class="header-actions">
                     <button onclick="exportToCSV()">📥 CSV 다운로드</button>
@@ -153,7 +128,6 @@
             </header>
 
             <div id="tab-portfolio" class="tab-content active">
-                
                 <div class="section-title">🏦 종합 자산 & 계좌 예수금/신용 현황</div>
                 <div class="port-grid">
                     <div class="stat-card"><h3>💰 D+2 예수금 (현금)</h3><div class="value" style="color:var(--text-main);">0원</div></div>
@@ -162,6 +136,67 @@
                     <div class="stat-card"><h3>🚨 담보비율 (평가금/대출)</h3><div class="value" style="color:#ef4444;">미사용</div></div>
                 </div>
                 
+
+                <div class="section-title">🌙 실시간 야간선물 · 투자자별 투자현황 · 일반주식 수급 차트</div>
+                <div class="market-charts-grid">
+                    <div class="chart-card">
+                        <h3>🌙 야간선물 추이 <span style="font-size:12px; color:#10b981;">(4,697.51 / +0.00%)</span></h3>
+                        <div style="flex:1; position:relative;"><canvas id="nightFuturesChart"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>👥 투자자별 순매수 현황 (외인·기관·개인)</h3>
+                        <div style="flex:1; position:relative;"><canvas id="investorFlowChart"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>📊 일반주식 수급 & 현재가 추이</h3>
+                        <div style="flex:1; position:relative;"><canvas id="stockSupplyChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="table-container" style="max-height: 240px; overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>종목명</th>
+                                <th>현재가</th>
+                                <th>외국인 순매수</th>
+                                <th>기관 순매수</th>
+                                <th>개인 순매수</th>
+                                <th>기준시각</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+        <tr>
+            <td><strong>삼성전자</strong></td>
+            <td>170,700원</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:var(--text-sub); font-size:12px;">2026-11-25 22:50</td>
+        </tr>
+        
+        <tr>
+            <td><strong>SK하이닉스</strong></td>
+            <td>1,030,000원</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:var(--text-sub); font-size:12px;">2026-11-25 22:50</td>
+        </tr>
+        
+        <tr>
+            <td><strong>한화에어로스페이스</strong></td>
+            <td>627,000원</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:#10b981; font-weight:bold;">+0</td>
+            <td style="color:var(--text-sub); font-size:12px;">2026-11-25 22:50</td>
+        </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
 
                 <div class="section-title">💼 내 실전 보유 주식 포트폴리오</div>
                 <div class="table-container">
@@ -208,39 +243,27 @@
                                 <th>개별 종목 평가액 상세</th>
                             </tr>
                         </thead>
-                        <tbody id="histTableBody">
-                            <!-- JS로 동적 생성됨 -->
-                        </tbody>
+                        <tbody id="histTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
             <div id="tab-simulator" class="tab-content">
                 <div class="section-title">🎮 실시간 매매 시뮬레이터 (가상 놀이터)</div>
-                
                 <div class="controls-box" style="flex-direction: column;">
                     <select id="simStockSelect" onchange="updateSimBase()" style="width: 100%; font-weight: bold; font-size: 15px;">
                         <option value="">🎯 시뮬레이션할 보유 종목을 선택하세요</option>
                     </select>
                 </div>
-                
-                <div id="simWorkspace" style="display:none; animation: fadeIn 0.3s ease;">
+                <div id="simWorkspace" style="display:none;">
                     <div class="port-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 15px;">
-                        <div class="stat-card">
-                            <h3 style="color:var(--text-sub);">현재 보유 수량</h3>
-                            <div class="value" id="simCurrQty" style="color:var(--text-main); font-size: 18px;">0주</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3 style="color:var(--text-sub);">현재 평단가</h3>
-                            <div class="value" id="simCurrAvg" style="color:var(--text-main); font-size: 18px;">0원</div>
-                        </div>
+                        <div class="stat-card"><h3>현재 보유 수량</h3><div class="value" id="simCurrQty" style="color:var(--text-main); font-size: 18px;">0주</div></div>
+                        <div class="stat-card"><h3>현재 평단가</h3><div class="value" id="simCurrAvg" style="color:var(--text-main); font-size: 18px;">0원</div></div>
                     </div>
-                    
                     <div style="display:flex; gap:10px; margin-bottom:15px;">
                         <button class="filter-btn active" id="simBtnBuy" style="flex:1; padding:12px; font-size:14px; border-radius:8px;" onclick="setSimMode('buy')">🔴 추가 매수 (물타기)</button>
                         <button class="filter-btn" id="simBtnSell" style="flex:1; padding:12px; font-size:14px; border-radius:8px;" onclick="setSimMode('sell')">🔵 분할 매도 (익절/손절)</button>
                     </div>
-                    
                     <div class="controls-box" style="flex-direction:column; gap:15px; margin-bottom: 20px;">
                         <div style="display:flex; gap:10px;">
                             <div style="flex:1;">
@@ -264,17 +287,13 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="section-title" style="margin-bottom: 12px; color: var(--primary);">📊 시뮬레이션 결과</div>
-                    <div class="port-grid" id="simResultGrid" style="grid-template-columns: repeat(2, 1fr);">
-                        <!-- Dynamic results injected by JS -->
-                    </div>
+                    <div class="port-grid" id="simResultGrid" style="grid-template-columns: repeat(2, 1fr);"></div>
                 </div>
             </div>
 
             <div id="tab-realized" class="tab-content">
                 <div class="section-title" style="margin-bottom: 15px;">💰 누적 실현 손익 (제세금·수수료 실반영) & 퀀트 분석</div>
-                
                 <div class="controls-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 12px 15px; margin-bottom: 20px;">
                     <div class="realized-filters">
                         <button class="filter-btn" onclick="filterRealized('day', this)">오늘(일)</button>
@@ -289,27 +308,13 @@
                     </div>
                 </div>
 
-                <!-- 💡 [V19.3 핵심] 1열: 실현 승률, 총 매매건수, 손익비 카드 -->
                 <div class="port-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 15px;">
-                    <div class="stat-card">
-                        <h3>🎯 실현 승률 (Win Rate)</h3>
-                        <div class="value" id="statWinRate" style="color:#10b981;">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>📦 총 매매 건수 (익절/손절)</h3>
-                        <div class="value" id="statTradeCount" style="color:var(--text-main);">0건</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>⚖️ 손익비 (Profit Factor)</h3>
-                        <div class="value" id="statProfitFactor" style="color:#f59e0b;">0.0x</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>⏱️ 평균 보유일 (익절 / 손절)</h3>
-                        <div class="value" id="statHoldCompare" style="color:#8b5cf6; font-size:17px; margin-top:12px;">0일 / 0일</div>
-                    </div>
+                    <div class="stat-card"><h3>🎯 실현 승률 (Win Rate)</h3><div class="value" id="statWinRate" style="color:#10b981;">0%</div></div>
+                    <div class="stat-card"><h3>📦 총 매매 건수 (익절/손절)</h3><div class="value" id="statTradeCount" style="color:var(--text-main);">0건</div></div>
+                    <div class="stat-card"><h3>⚖️ 손익비 (Profit Factor)</h3><div class="value" id="statProfitFactor" style="color:#f59e0b;">0.0x</div></div>
+                    <div class="stat-card"><h3>⏱️ 평균 보유일 (익절 / 손절)</h3><div class="value" id="statHoldCompare" style="color:#8b5cf6; font-size:17px; margin-top:12px;">0일 / 0일</div></div>
                 </div>
 
-                <!-- 💡 2열: 기본 금액 통계 -->
                 <div class="port-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 15px;">
                     <div class="stat-card"><h3>선택 기간 총 투자 원금</h3><div class="value" id="statPrincipal" style="color:var(--text-main);">0원</div></div>
                     <div class="stat-card"><h3>선택 기간 총 매도 회수금</h3><div class="value" id="statRetrieved" style="color:#3b82f6;">0원</div></div>
@@ -320,42 +325,30 @@
                     </div>
                 </div>
 
-                <!-- 💡 [V19.4 핵심] 월~금 전체 요일 분석 패널 -->
                 <div class="section-title" style="margin-top:30px;">📅 요일별 매매 엣지 분석 (월~금)</div>
-                <div class="day-grid" id="dayEdgeGrid">
-                    <!-- JS 연산 후 월~금 5단 카드가 여기에 동적 삽입됩니다 -->
-                </div>
+                <div class="day-grid" id="dayEdgeGrid"></div>
 
-                <!-- 💡 [V19.4 핵심] 월별 통계는 인사이트 박스로 분리 -->
                 <div class="insight-box">
-                    <div class="insight-item">
-                        <h4>🏆 최고 승률 달 (Monthly)</h4>
-                        <div class="highlight" id="insightBestMonthWin">-</div>
-                    </div>
-                    <div class="insight-item" style="border-right: none;">
-                        <h4>💰 최고 수익금 달 (Monthly)</h4>
-                        <div class="highlight" id="insightBestMonthProfit" style="color:#10b981;">-</div>
-                    </div>
+                    <div class="insight-item"><h4>🏆 최고 승률 달 (Monthly)</h4><div class="highlight" id="insightBestMonthWin">-</div></div>
+                    <div class="insight-item" style="border-right: none;"><h4>💰 최고 수익금 달 (Monthly)</h4><div class="highlight" id="insightBestMonthProfit" style="color:#10b981;">-</div></div>
                 </div>
 
                 <div class="table-container">
                     <table id="realizedTable">
                         <thead>
                             <tr>
-                                <th id="th_sell_date" onclick="sortRealized('sell_date')" title="클릭하여 날짜별 정렬">매도 일자 ▼</th>
+                                <th id="th_sell_date" onclick="sortRealized('sell_date')">매도 일자 ▼</th>
                                 <th>종목명</th>
-                                <th id="th_hold_days" onclick="sortRealized('hold_days')" title="클릭하여 기간별 정렬">보유 기간 ↕</th>
+                                <th id="th_hold_days" onclick="sortRealized('hold_days')">보유 기간 ↕</th>
                                 <th>매도 수량</th>
                                 <th>매수 단가</th>
                                 <th>매도 단가</th>
                                 <th>수수료/제세금</th>
-                                <th id="th_realized_profit" onclick="sortRealized('realized_profit')" title="클릭하여 금액별 정렬">확정 순수익 ↕</th>
-                                <th id="th_return_pct" onclick="sortRealized('return_pct')" title="클릭하여 수익률별 정렬">수익률 ↕</th>
+                                <th id="th_realized_profit" onclick="sortRealized('realized_profit')">확정 순수익 ↕</th>
+                                <th id="th_return_pct" onclick="sortRealized('return_pct')">수익률 ↕</th>
                             </tr>
                         </thead>
-                        <tbody id="realizedTableBody">
-                            <!-- JS로 동적 생성됨 -->
-                        </tbody>
+                        <tbody id="realizedTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -374,10 +367,8 @@
 
             <div id="tab-timeline" class="tab-content">
                 <div class="section-title">📝 AI 예측 오답노트 및 상세 내역</div>
-                
                 <div id="predPlaceholder" style="text-align:center; padding: 60px 20px; background:var(--card-bg); border-radius:12px; border:1px solid var(--border-color); margin-bottom:20px;">
                     <h3 style="margin-top:0; color:var(--text-sub);">데이터가 안전하게 대기 중입니다.</h3>
-                    <p style="color:var(--text-sub); font-size:13px; margin-bottom:20px;">수백 건의 예측 데이터를 미리 불러오면 기기가 느려질 수 있습니다.</p>
                     <button onclick="loadPredictions()" class="filter-btn" style="background:var(--primary); color:#fff; font-size:16px; padding:12px 24px; border-radius:8px;">
                         🚀 과거 AI 예측 데이터 전체 불러오기 (총 0건)
                     </button>
@@ -403,7 +394,6 @@
                             <option value="">모든 테마(태그)</option>
                         </select>
                     </div>
-
                     <div class="table-container">
                         <table id="predTable">
                             <thead>
@@ -418,8 +408,7 @@
                                     <th>상태/오답노트</th>
                                 </tr>
                             </thead>
-                            <tbody id="predTableBody">
-                            </tbody>
+                            <tbody id="predTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -427,21 +416,11 @@
         </div>
 
         <nav class="bottom-nav">
-            <button class="nav-btn active" onclick="switchTab('tab-portfolio', this)">
-                <span>💼</span><div>내 계좌</div>
-            </button>
-            <button class="nav-btn" onclick="switchTab('tab-realized', this)">
-                <span>💰</span><div>실현손익</div>
-            </button>
-            <button class="nav-btn" onclick="switchTab('tab-simulator', this)">
-                <span>🎮</span><div>시뮬</div>
-            </button>
-            <button class="nav-btn" onclick="switchTab('tab-stats', this)">
-                <span>📊</span><div>AI 통계</div>
-            </button>
-            <button class="nav-btn" onclick="switchTab('tab-timeline', this)">
-                <span>🤖</span><div>타임라인</div>
-            </button>
+            <button class="nav-btn active" onclick="switchTab('tab-portfolio', this)"><span>💼</span><div>내 계좌</div></button>
+            <button class="nav-btn" onclick="switchTab('tab-realized', this)"><span>💰</span><div>실현손익</div></button>
+            <button class="nav-btn" onclick="switchTab('tab-simulator', this)"><span>🎮</span><div>시뮬</div></button>
+            <button class="nav-btn" onclick="switchTab('tab-stats', this)"><span>📊</span><div>AI 통계</div></button>
+            <button class="nav-btn" onclick="switchTab('tab-timeline', this)"><span>🤖</span><div>타임라인</div></button>
         </nav>
 
         <div id="imgModal" class="modal" onclick="closeModal()"><img class="modal-content" id="modalImg"></div>
@@ -462,11 +441,12 @@
             window.onload = function() {
                 updateThemeBtnText();
                 initMainAssetChart();
+                initMarketCharts();
                 updateHistChart(0, document.querySelector('.filter-btn.active'));
-                
+
                 setTimeout(() => {
                     filterRealized('all', document.getElementById('btnFilterAll'));
-                    initSimulator(); 
+                    initSimulator();
                 }, 100);
 
                 let allTags = new Set();
@@ -480,6 +460,68 @@
                 calculateAndRenderStatsOnly();
                 window.addEventListener('resize', handleResize);
             };
+
+            function initMarketCharts() {
+                const nfCtx = document.getElementById('nightFuturesChart');
+                if (nfCtx) {
+                    nightFuturesChart = new Chart(nfCtx, {
+                        type: 'line',
+                        data: {
+                            labels: nfDataRaw.map(r => (r.recorded_at || '').substring(5)),
+                            datasets: [{
+                                label: '야간선물 지수',
+                                data: nfDataRaw.map(r => r.index_val),
+                                borderColor: '#8b5cf6',
+                                backgroundColor: 'rgba(139, 92, 246, 0.12)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.25
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    });
+                }
+
+                const latestByStock = {};
+                supplyDataRaw.forEach(s => { latestByStock[s.stock] = s; });
+                const stockKeys = Object.keys(latestByStock);
+
+                const invCtx = document.getElementById('investorFlowChart');
+                if (invCtx) {
+                    investorFlowChart = new Chart(invCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: stockKeys,
+                            datasets: [
+                                { label: '외인', data: stockKeys.map(k => latestByStock[k].foreign_net || 0), backgroundColor: '#3b82f6' },
+                                { label: '기관', data: stockKeys.map(k => latestByStock[k].inst_net || 0), backgroundColor: '#10b981' },
+                                { label: '개인', data: stockKeys.map(k => latestByStock[k].indiv_net || 0), backgroundColor: '#f59e0b' }
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } } }
+                    });
+                }
+
+                const supCtx = document.getElementById('stockSupplyChart');
+                if (supCtx) {
+                    stockSupplyChart = new Chart(supCtx, {
+                        type: 'line',
+                        data: {
+                            labels: supplyDataRaw.slice(-15).map(s => `${s.stock} (${(s.recorded_at||'').substring(11)})`) ,
+                            datasets: [{
+                                label: '현재가(원)',
+                                data: supplyDataRaw.slice(-15).map(s => s.price || 0),
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.25
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    });
+                }
+            }
 
             let simMode = 'buy';
             let selPort = null;
@@ -499,7 +541,6 @@
                 document.getElementById('simWorkspace').style.display = 'block';
                 document.getElementById('simCurrQty').innerText = intFmt.format(selPort.qty) + '주';
                 document.getElementById('simCurrAvg').innerText = intFmt.format(Math.round(selPort.avg_price_krw)) + '원';
-                
                 document.getElementById('simPrice').value = Math.round(selPort.curr_price_krw);
                 document.getElementById('simQty').value = '';
                 document.getElementById('simAmt').value = '';
@@ -514,24 +555,14 @@
                 let btnSell = document.getElementById('simBtnSell');
                 let targetContainer = document.getElementById('targetAvgContainer');
                 let warnDiv = document.getElementById('simWarning');
-                
                 if(mode === 'buy') {
-                    btnBuy.style.background = '#ef4444';
-                    btnBuy.style.color = '#fff';
-                    btnBuy.style.borderColor = '#ef4444';
-                    btnSell.style.background = 'var(--card-bg)';
-                    btnSell.style.color = 'var(--text-main)';
-                    btnSell.style.borderColor = 'var(--border-color)';
+                    btnBuy.style.background = '#ef4444'; btnBuy.style.color = '#fff'; btnBuy.style.borderColor = '#ef4444';
+                    btnSell.style.background = 'var(--card-bg)'; btnSell.style.color = 'var(--text-main)'; btnSell.style.borderColor = 'var(--border-color)';
                     targetContainer.style.display = 'block';
                 } else {
-                    btnSell.style.background = '#3b82f6';
-                    btnSell.style.color = '#fff';
-                    btnSell.style.borderColor = '#3b82f6';
-                    btnBuy.style.background = 'var(--card-bg)';
-                    btnBuy.style.color = 'var(--text-main)';
-                    btnBuy.style.borderColor = 'var(--border-color)';
-                    targetContainer.style.display = 'none';
-                    warnDiv.style.display = 'none';
+                    btnSell.style.background = '#3b82f6'; btnSell.style.color = '#fff'; btnSell.style.borderColor = '#3b82f6';
+                    btnBuy.style.background = 'var(--card-bg)'; btnBuy.style.color = 'var(--text-main)'; btnBuy.style.borderColor = 'var(--border-color)';
+                    targetContainer.style.display = 'none'; warnDiv.style.display = 'none';
                 }
                 calcSim('mode');
             }
@@ -543,93 +574,64 @@
                 let amtInput = document.getElementById('simAmt');
                 let targetInput = document.getElementById('simTargetAvg');
                 let warnDiv = document.getElementById('simWarning');
-                
-                let qty = 0;
-                let amt = 0;
-                let oldQty = selPort.qty;
-                let oldAvg = selPort.avg_price_krw;
-
+                let qty = 0, amt = 0, oldQty = selPort.qty, oldAvg = selPort.avg_price_krw;
                 warnDiv.style.display = 'none';
 
                 if (simMode === 'buy' && trigger === 'target') {
                     let targetAvg = parseFloat(targetInput.value) || 0;
                     if (targetAvg > 0 && price > 0) {
-                        let possible = false;
-                        if (oldAvg > targetAvg && price < targetAvg) possible = true; 
-                        else if (oldAvg < targetAvg && price > targetAvg) possible = true; 
-                        
+                        let possible = (oldAvg > targetAvg && price < targetAvg) || (oldAvg < targetAvg && price > targetAvg);
                         if (possible) {
                             let reqQty = (oldQty * (targetAvg - oldAvg)) / (price - targetAvg);
                             if (reqQty > 0) {
                                 qtyInput.value = Math.ceil(reqQty);
                                 amtInput.value = Math.ceil(reqQty) * price;
-                                qty = Math.ceil(reqQty);
-                                amt = qty * price;
+                                qty = Math.ceil(reqQty); amt = qty * price;
                             }
                         } else {
-                            warnDiv.style.display = 'block';
-                            qtyInput.value = '';
-                            amtInput.value = '';
+                            warnDiv.style.display = 'block'; qtyInput.value = ''; amtInput.value = '';
                         }
-                    } else {
-                        qtyInput.value = '';
-                        amtInput.value = '';
-                    }
+                    } else { qtyInput.value = ''; amtInput.value = ''; }
                 } else {
-                    if(trigger === 'qty' || trigger === 'amt') {
-                        targetInput.value = ''; 
-                    }
+                    if(trigger === 'qty' || trigger === 'amt') targetInput.value = '';
                     if(price > 0) {
                         if(trigger === 'amt') {
                             amt = parseFloat(amtInput.value) || 0;
                             qty = Math.floor(amt / price);
                             qtyInput.value = qty > 0 ? qty : '';
-                        } else if (trigger === 'qty' || trigger === 'price' || trigger === 'mode') {
+                        } else {
                             qty = parseFloat(qtyInput.value) || 0;
                             amt = qty * price;
                             if(trigger !== 'mode') amtInput.value = amt > 0 ? amt : '';
                         }
-                    } else {
-                        qty = parseFloat(qtyInput.value) || 0;
-                    }
+                    } else { qty = parseFloat(qtyInput.value) || 0; }
                 }
 
                 let resHtml = '';
                 if(simMode === 'buy') {
-                    let oldTotal = oldQty * oldAvg;
                     let newQty = oldQty + qty;
-                    let newTotal = oldTotal + amt;
+                    let newTotal = (oldQty * oldAvg) + amt;
                     let newAvg = newQty > 0 ? newTotal / newQty : 0;
-                    let currMarket = selPort.curr_price_krw;
-                    let newPnlAmt = (currMarket - newAvg) * newQty;
+                    let newPnlAmt = (selPort.curr_price_krw - newAvg) * newQty;
                     let newPnlPct = newTotal > 0 ? (newPnlAmt / newTotal) * 100 : 0;
                     let pnlColor = newPnlAmt >= 0 ? "#10b981" : "#ef4444";
                     let sign = newPnlAmt > 0 ? "+" : "";
-
                     resHtml = `
-                        <div class="stat-card" style="border-color:#ef4444; background:rgba(239, 68, 68, 0.03);"><h3>🎯 예상 새 평단가</h3><div class="value" style="color:#ef4444;">${intFmt.format(Math.round(newAvg))}원</div></div>
+                        <div class="stat-card" style="border-color:#ef4444;"><h3>🎯 예상 새 평단가</h3><div class="value" style="color:#ef4444;">${intFmt.format(Math.round(newAvg))}원</div></div>
                         <div class="stat-card"><h3>📦 예상 총 수량</h3><div class="value">${intFmt.format(newQty)}주</div></div>
                         <div class="stat-card"><h3>💸 추가 필요 자금</h3><div class="value">${intFmt.format(Math.round(amt))}원</div></div>
-                        <div class="stat-card"><h3>📊 예상 손익(현재가 기준)</h3><div class="value" style="color:${pnlColor}; font-size:16px;">${sign}${intFmt.format(Math.round(newPnlAmt))}원<br><span style="font-size:12px;">(${sign}${newPnlPct.toFixed(2)}%)</span></div></div>
+                        <div class="stat-card"><h3>📊 예상 손익</h3><div class="value" style="color:${pnlColor}; font-size:16px;">${sign}${intFmt.format(Math.round(newPnlAmt))}원 (${sign}${newPnlPct.toFixed(2)}%)</div></div>
                     `;
                 } else {
-                    let actQty = qty > oldQty ? oldQty : qty; 
-                    if(qty > oldQty && (trigger === 'qty' || trigger === 'amt')) {
-                        actQty = oldQty;
-                        qtyInput.value = actQty;
-                        amtInput.value = actQty * price;
-                    }
-                    
+                    let actQty = Math.min(qty, oldQty);
                     let realizedProfit = (price - oldAvg) * actQty;
                     let returnPct = oldAvg > 0 ? ((price - oldAvg) / oldAvg) * 100 : 0;
-                    let remQty = oldQty - actQty;
                     let pnlColor = realizedProfit >= 0 ? "#10b981" : "#ef4444";
                     let sign = realizedProfit > 0 ? "+" : "";
-
                     resHtml = `
-                        <div class="stat-card" style="border-color:#3b82f6; background:rgba(59, 130, 246, 0.03);"><h3>💰 확정 수익금(세전)</h3><div class="value" style="color:${pnlColor};">${sign}${intFmt.format(Math.round(realizedProfit))}원</div></div>
+                        <div class="stat-card" style="border-color:#3b82f6;"><h3>💰 확정 수익금(세전)</h3><div class="value" style="color:${pnlColor};">${sign}${intFmt.format(Math.round(realizedProfit))}원</div></div>
                         <div class="stat-card"><h3>📈 매도 수익률</h3><div class="value" style="color:${pnlColor};">${sign}${returnPct.toFixed(2)}%</div></div>
-                        <div class="stat-card"><h3>📦 남은 잔고 수량</h3><div class="value">${intFmt.format(remQty)}주</div></div>
+                        <div class="stat-card"><h3>📦 남은 잔고 수량</h3><div class="value">${intFmt.format(oldQty - actQty)}주</div></div>
                         <div class="stat-card"><h3>💸 회수 예정 금액</h3><div class="value">${intFmt.format(Math.round(price * actQty))}원</div></div>
                     `;
                 }
@@ -643,92 +645,41 @@
             }
 
             function sortRealized(col) {
-                if (currentSortCol === col) {
-                    currentSortDir *= -1; 
-                } else {
-                    currentSortCol = col;
-                    currentSortDir = -1; 
-                }
-                
-                document.querySelectorAll('#realizedTable thead th').forEach(th => {
-                    th.innerText = th.innerText.replace(' ▲', '').replace(' ▼', '').replace(' ↕', ' ↕');
-                });
-                let activeTh = document.getElementById('th_' + col);
-                if(activeTh) {
-                    activeTh.innerText = activeTh.innerText.replace(' ↕', '') + (currentSortDir === 1 ? ' ▲' : ' ▼');
-                }
-                
+                if (currentSortCol === col) currentSortDir *= -1;
+                else { currentSortCol = col; currentSortDir = -1; }
                 filterRealized(currentFilterType, null, true);
             }
-            
-            // 💡 [V19.3 & V19.4] 실현손익 통계 및 요일/월별 엣지 분석 엔진
-            function filterRealized(type, btnElement, isSort=false) {
-                if (!isSort) currentFilterType = type; 
 
+            function filterRealized(type, btnElement, isSort=false) {
+                if (!isSort) currentFilterType = type;
                 if(btnElement) {
                     document.querySelectorAll('.realized-filters .filter-btn').forEach(b => b.classList.remove('active'));
                     btnElement.classList.add('active');
                 }
-                
                 setTimeout(() => {
-                    let today = new Date();
-                    let start = '';
-                    let end = '';
+                    let today = new Date(), start = '', end = '';
                     const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-
-                    if (type === 'day') {
-                        start = fmt(today); end = fmt(today);
-                    } else if (type === 'week') {
-                        let d = new Date(today);
-                        let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
-                        start = fmt(new Date(d.setDate(diff)));
-                        end = fmt(today);
+                    if (type === 'day') { start = fmt(today); end = fmt(today); }
+                    else if (type === 'week') {
+                        let d = new Date(today), day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                        start = fmt(new Date(d.setDate(diff))); end = fmt(today);
                     } else if (type === 'month') {
                         start = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-01';
-                        let lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                        end = fmt(lastDay);
-                    } else if (type === 'year') {
-                        start = today.getFullYear() + '-01-01';
-                        end = today.getFullYear() + '-12-31';
-                    } else if (type === 'custom') {
-                        start = document.getElementById('startDate').value;
-                        end = document.getElementById('endDate').value;
-                    }
+                        end = fmt(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+                    } else if (type === 'year') { start = today.getFullYear() + '-01-01'; end = today.getFullYear() + '-12-31'; }
+                    else if (type === 'custom') { start = document.getElementById('startDate').value; end = document.getElementById('endDate').value; }
+                    if (type !== 'custom') { document.getElementById('startDate').value = start; document.getElementById('endDate').value = end; }
 
-                    if (type !== 'custom') {
-                        document.getElementById('startDate').value = start;
-                        document.getElementById('endDate').value = end;
-                    }
-
-                    let filtered = [...realizedDataRaw]; 
+                    let filtered = [...realizedDataRaw];
                     if(start) filtered = filtered.filter(d => d.sell_date >= start);
                     if(end) filtered = filtered.filter(d => d.sell_date <= end);
+                    filtered.sort((a, b) => (a[currentSortCol] < b[currentSortCol] ? -1 : 1) * currentSortDir);
 
-                    filtered.sort((a, b) => {
-                        let valA = a[currentSortCol];
-                        let valB = b[currentSortCol];
-                        if (valA < valB) return -1 * currentSortDir;
-                        if (valA > valB) return 1 * currentSortDir;
-                        return 0;
-                    });
-
-                    let totalRetrieved = 0, totalProfit = 0, totalPrincipal = 0, totalFee = 0;
-                    let winCount = 0, lossCount = 0;
-                    let sumWinProfit = 0, sumLossProfit = 0;
+                    let totalRetrieved = 0, totalProfit = 0, totalPrincipal = 0, totalFee = 0, winCount = 0, lossCount = 0, sumWinProfit = 0, sumLossProfit = 0;
                     let winHoldDays = [], lossHoldDays = [];
-
-                    const dayNames = {1: '월요일', 2: '화요일', 3: '수요일', 4: '목요일', 5: '금요일', 6: '토요일', 0: '일요일'};
-                    let dayStats = {
-                        1: { wins: 0, total: 0, sumReturn: 0, profit: 0 },
-                        2: { wins: 0, total: 0, sumReturn: 0, profit: 0 },
-                        3: { wins: 0, total: 0, sumReturn: 0, profit: 0 },
-                        4: { wins: 0, total: 0, sumReturn: 0, profit: 0 },
-                        5: { wins: 0, total: 0, sumReturn: 0, profit: 0 }
-                    };
-                    let monthStats = {};
-
-                    let tbody = document.getElementById('realizedTableBody');
-                    let htmlStr = '';
+                    const dayNames = {1: '월요일', 2: '화요일', 3: '수요일', 4: '목요일', 5: '금요일'};
+                    let dayStats = {1:{wins:0,total:0,sumReturn:0}, 2:{wins:0,total:0,sumReturn:0}, 3:{wins:0,total:0,sumReturn:0}, 4:{wins:0,total:0,sumReturn:0}, 5:{wins:0,total:0,sumReturn:0}};
+                    let monthStats = {}, htmlStr = '';
 
                     for(let i=0; i<filtered.length; i++) {
                         let r = filtered[i];
@@ -736,123 +687,63 @@
                         let sellTot = r.sell_price * r.sell_qty * fx;
                         let fee = r.fee_amt || 0;
                         let netRet = sellTot - fee;
-                        let principal = netRet - r.realized_profit; 
+                        let principal = netRet - r.realized_profit;
+                        totalRetrieved += netRet; totalProfit += r.realized_profit; totalPrincipal += principal; totalFee += fee;
 
-                        totalRetrieved += netRet;
-                        totalProfit += r.realized_profit;
-                        totalPrincipal += principal;
-                        totalFee += fee;
+                        if (r.realized_profit > 0) { winCount++; sumWinProfit += r.realized_profit; if (r.hold_days > 0) winHoldDays.push(r.hold_days); }
+                        else if (r.realized_profit < 0) { lossCount++; sumLossProfit += Math.abs(r.realized_profit); if (r.hold_days > 0) lossHoldDays.push(r.hold_days); }
 
-                        if (r.realized_profit > 0) {
-                            winCount++;
-                            sumWinProfit += r.realized_profit;
-                            if (r.hold_days > 0) winHoldDays.push(r.hold_days);
-                        } else if (r.realized_profit < 0) {
-                            lossCount++;
-                            sumLossProfit += Math.abs(r.realized_profit);
-                            if (r.hold_days > 0) lossHoldDays.push(r.hold_days);
-                        }
+                        let p = String(r.sell_date).split('-');
+                        let dayNum = new Date(p[0], (p[1]||1)-1, p[2]||1).getDay();
+                        if (dayStats[dayNum]) { dayStats[dayNum].total++; dayStats[dayNum].sumReturn += (r.return_pct || 0); if (r.realized_profit > 0) dayStats[dayNum].wins++; }
 
-                        let p = r.sell_date.split('-');
-                        let dt = new Date(p[0], p[1]-1, p[2]);
-                        let dayNum = dt.getDay(); 
-                        if (dayStats[dayNum]) {
-                            dayStats[dayNum].total++;
-                            dayStats[dayNum].sumReturn += r.return_pct;
-                            dayStats[dayNum].profit += r.realized_profit;
-                            if (r.realized_profit > 0) dayStats[dayNum].wins++;
-                        }
-
-                        let mKey = r.sell_date.substring(0, 7);
-                        if (!monthStats[mKey]) monthStats[mKey] = { wins: 0, total: 0, profit: 0, sumReturn: 0 };
-                        monthStats[mKey].total++;
-                        monthStats[mKey].profit += r.realized_profit;
-                        monthStats[mKey].sumReturn += r.return_pct;
+                        let mKey = String(r.sell_date).substring(0, 7);
+                        if (!monthStats[mKey]) monthStats[mKey] = { wins: 0, total: 0, profit: 0 };
+                        monthStats[mKey].total++; monthStats[mKey].profit += r.realized_profit;
                         if (r.realized_profit > 0) monthStats[mKey].wins++;
 
                         let pnlColor = r.realized_profit >= 0 ? "#10b981" : "#ef4444";
                         let sign = r.realized_profit > 0 ? "+" : "";
-                        let cb = r.currency === 'USD' ? "💲 USD" : "₩ KRW";
-                        let hold = r.hold_days > 0 ? "<strong>" + r.hold_days + "일</strong>" : "<span style='color:var(--text-sub);'>-</span>";
-                        
-                        let buyStr = formatNumber(Math.round(r.buy_price));
-                        let sellStr = formatNumber(Math.round(r.sell_price));
-                        
                         htmlStr += `<tr>
                             <td>${r.sell_date}</td>
-                            <td><span class='badge badge-wait'>${cb}</span> <strong>${r.stock}</strong></td>
-                            <td>${hold}</td>
+                            <td><strong>${r.stock}</strong></td>
+                            <td>${r.hold_days > 0 ? r.hold_days + '일' : '-'}</td>
                             <td>${intFmt.format(r.sell_qty)}주</td>
-                            <td>${buyStr}</td>
-                            <td>${sellStr}</td>
+                            <td>${formatNumber(Math.round(r.buy_price))}</td>
+                            <td>${formatNumber(Math.round(r.sell_price))}</td>
                             <td style='color:#ef4444;'>-${intFmt.format(Math.round(fee))}원</td>
                             <td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.realized_profit))}원</td>
-                            <td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.return_pct.toFixed(2)}%</td>
+                            <td style='color:${pnlColor}; font-weight:bold;'>${sign}${Number(r.return_pct || 0).toFixed(2)}%</td>
                         </tr>`;
                     }
 
-                    let totalTrades = winCount + lossCount;
-                    let winRate = totalTrades > 0 ? (winCount / totalTrades * 100) : 0;
-                    let profitFactor = sumLossProfit > 0 ? (sumWinProfit / sumLossProfit) : (sumWinProfit > 0 ? 99.9 : 0.0);
-                    let avgWinHold = winHoldDays.length > 0 ? (winHoldDays.reduce((a,b)=>a+b,0) / winHoldDays.length).toFixed(1) : 0;
-                    let avgLossHold = lossHoldDays.length > 0 ? (lossHoldDays.reduce((a,b)=>a+b,0) / lossHoldDays.length).toFixed(1) : 0;
-                    let totalROI = totalPrincipal > 0 ? (totalProfit / totalPrincipal * 100) : 0;
-
-                    // 💡 [V19.4] 요일별 승률/수익률 바 생성 렌더링
                     let dayEdgeHtml = '';
                     for (let d = 1; d <= 5; d++) {
-                        let wr = 0, avgR = 0;
-                        if (dayStats[d].total > 0) {
-                            wr = (dayStats[d].wins / dayStats[d].total) * 100;
-                            avgR = dayStats[d].sumReturn / dayStats[d].total;
-                        }
+                        let wr = dayStats[d].total > 0 ? (dayStats[d].wins / dayStats[d].total) * 100 : 0;
+                        let avgR = dayStats[d].total > 0 ? dayStats[d].sumReturn / dayStats[d].total : 0;
                         let color = avgR >= 0 ? '#10b981' : '#ef4444';
-                        let sign = avgR > 0 ? '+' : '';
-                        let wrColor = wr >= 50 ? '#3b82f6' : '#ef4444';
-                        let opacity = dayStats[d].total === 0 ? 'opacity:0.4;' : '';
-                        
-                        dayEdgeHtml += `
-                        <div class="stat-card" style="${opacity}">
-                            <h3 style="color:var(--text-main); font-weight:bold; margin-bottom: 5px;">${dayNames[d]} <span style="font-size:11px; color:var(--text-sub); font-weight:normal;">(${dayStats[d].total}건)</span></h3>
-                            <div class="value" style="color:${wrColor}; font-size:20px; margin-top:8px;">${wr.toFixed(1)}%</div>
-                            <div style="font-size:13px; color:${color}; font-weight:bold; margin-top:5px;">${sign}${avgR.toFixed(2)}%</div>
-                        </div>`;
+                        dayEdgeHtml += `<div class="stat-card"><h3>${dayNames[d]} (${dayStats[d].total}건)</h3><div class="value" style="font-size:20px;">${wr.toFixed(1)}%</div><div style="font-size:13px; color:${color}; font-weight:bold;">${avgR > 0 ? '+' : ''}${avgR.toFixed(2)}%</div></div>`;
                     }
                     document.getElementById('dayEdgeGrid').innerHTML = dayEdgeHtml;
+                    document.getElementById('realizedTableBody').innerHTML = htmlStr || "<tr><td colspan='9' style='text-align:center; padding:30px;'>조회된 매도 기록이 없습니다.</td></tr>";
 
-                    let bestMonthWin = '-', bestMonthWinRate = -1;
-                    let bestMonthProfit = '-', bestMonthProfitVal = -Infinity;
-                    Object.keys(monthStats).forEach(mKey => {
-                        let ms = monthStats[mKey];
-                        let wr = (ms.wins / ms.total) * 100;
-                        if (wr > bestMonthWinRate) { bestMonthWinRate = wr; bestMonthWin = `${mKey.substring(5)}월 (${wr.toFixed(1)}%)`; }
-                        if (ms.profit > bestMonthProfitVal) { bestMonthProfitVal = ms.profit; bestMonthProfit = `${mKey.substring(5)}월 (${ms.profit > 0 ? '+' : ''}${intFmt.format(Math.round(ms.profit))}원)`; }
-                    });
-
-                    if (filtered.length === 0) {
-                        htmlStr = "<tr><td colspan='9' style='text-align:center; padding:30px; color:var(--text-sub);'>해당 기간에 조회된 매도 기록이 없습니다.</td></tr>";
-                    }
-                    tbody.innerHTML = htmlStr;
-                    
+                    let totalTrades = winCount + lossCount;
+                    let winRate = totalTrades > 0 ? (winCount / totalTrades * 100) : 0;
+                    let pf = sumLossProfit > 0 ? (sumWinProfit / sumLossProfit) : (sumWinProfit > 0 ? 99.9 : 0.0);
+                    let avgWinHold = winHoldDays.length > 0 ? (winHoldDays.reduce((a,b)=>a+b,0)/winHoldDays.length).toFixed(1) : 0;
+                    let avgLossHold = lossHoldDays.length > 0 ? (lossHoldDays.reduce((a,b)=>a+b,0)/lossHoldDays.length).toFixed(1) : 0;
+                    let roi = totalPrincipal > 0 ? (totalProfit / totalPrincipal * 100) : 0;
                     let pColor = totalProfit >= 0 ? "#10b981" : "#ef4444";
                     let pSign = totalProfit > 0 ? "+" : "";
 
                     document.getElementById('statWinRate').innerText = winRate.toFixed(1) + "%";
-                    document.getElementById('statTradeCount').innerHTML = `${totalTrades}건 <span style="font-size:13px; color:var(--text-sub);">(${winCount}승 / ${lossCount}패)</span>`;
-                    document.getElementById('statProfitFactor').innerText = profitFactor >= 99 ? "∞ (무패)" : profitFactor.toFixed(2) + "x";
+                    document.getElementById('statTradeCount').innerHTML = `${totalTrades}건 (${winCount}승 / ${lossCount}패)`;
+                    document.getElementById('statProfitFactor').innerText = pf >= 99 ? "∞" : pf.toFixed(2) + "x";
                     document.getElementById('statHoldCompare').innerText = `${avgWinHold}일 / ${avgLossHold}일`;
-
-                    document.getElementById('statPrincipal').innerHTML = `${intFmt.format(Math.round(totalPrincipal))}원`;
-                    document.getElementById('statRetrieved').innerHTML = `${intFmt.format(Math.round(totalRetrieved))}원`;
-                    document.getElementById('statFee').innerHTML = `-${intFmt.format(Math.round(totalFee))}원`;
-                    document.getElementById('statProfit').innerHTML = `<span style="color:${pColor}">${pSign}${intFmt.format(Math.round(totalProfit))}원 <span style="font-size:13px;">(${pSign}${totalROI.toFixed(2)}%)</span></span>`;
-                    if (document.getElementById('statROI')) {
-                        document.getElementById('statROI').innerHTML = `<span style="color:${pColor}">${pSign}${totalROI.toFixed(2)}%</span>`;
-                    }
-
-                    document.getElementById('insightBestMonthWin').innerText = bestMonthWin;
-                    document.getElementById('insightBestMonthProfit').innerText = bestMonthProfit;
-
+                    document.getElementById('statPrincipal').innerText = `${intFmt.format(Math.round(totalPrincipal))}원`;
+                    document.getElementById('statRetrieved').innerText = `${intFmt.format(Math.round(totalRetrieved))}원`;
+                    document.getElementById('statFee').innerText = `-${intFmt.format(Math.round(totalFee))}원`;
+                    document.getElementById('statProfit').innerHTML = `<span style="color:${pColor}">${pSign}${intFmt.format(Math.round(totalProfit))}원 (${pSign}${roi.toFixed(2)}%)</span>`;
                 }, 50);
             }
 
@@ -863,27 +754,18 @@
                     data: {
                         labels: [],
                         datasets: [
-                            { label: '총 평가금액 (현재가치)', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 2 },
-                            { label: '총 매입금액 (투자원금)', data: [], borderColor: '#94a3b8', borderDash: [5, 5], backgroundColor: 'transparent', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 0 }
+                            { label: '총 평가금액', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 2, fill: true, tension: 0.3 },
+                            { label: '총 매입금액', data: [], borderColor: '#94a3b8', borderDash: [5, 5], borderWidth: 2, fill: false, tension: 0.3 }
                         ]
                     },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: true, position: 'top', labels: { color: 'var(--text-sub)', font: { size: 11 } } } },
-                        interaction: { mode: 'index', intersect: false }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false }
                 });
             }
 
             function updateHistChart(days, btnElement) {
                 document.querySelectorAll('.chart-card .filter-btn').forEach(b => b.classList.remove('active'));
                 if(btnElement) btnElement.classList.add('active');
-
-                let filteredData = histDataRaw;
-                if(days > 0 && histDataRaw.length > days) {
-                    filteredData = histDataRaw.slice(histDataRaw.length - days);
-                }
-
+                let filteredData = (days > 0 && histDataRaw.length > days) ? histDataRaw.slice(histDataRaw.length - days) : histDataRaw;
                 mainAssetChart.data.labels = filteredData.map(d => d.date.substring(5));
                 mainAssetChart.data.datasets[0].data = filteredData.map(d => d.total_eval);
                 mainAssetChart.data.datasets[1].data = filteredData.map(d => d.total_cost);
@@ -894,13 +776,13 @@
                     let r = filteredData[i];
                     let pnlColor = r.total_pnl >= 0 ? "#10b981" : "#ef4444";
                     let sign = r.total_pnl > 0 ? "+" : "";
-                    htmlStr += `<tr><td><strong>${r.date}</strong></td><td><strong style='color:#3b82f6;'>${intFmt.format(Math.round(r.total_eval))}원</strong></td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.total_pnl))}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${r.total_pnl_pct.toFixed(2)}%</td><td style='font-size:11px; color:var(--text-sub);'>${r.details}</td></tr>`;
+                    htmlStr += `<tr><td><strong>${r.date}</strong></td><td>${intFmt.format(Math.round(r.total_eval))}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${intFmt.format(Math.round(r.total_pnl))}원</td><td style='color:${pnlColor}; font-weight:bold;'>${sign}${Number(r.total_pnl_pct || 0).toFixed(2)}%</td><td style='font-size:11px;'>${r.details || ''}</td></tr>`;
                 }
                 document.getElementById('histTableBody').innerHTML = htmlStr;
             }
 
             function switchTab(tabId, btn) {
-                if(window.innerWidth > 900) return; 
+                if(window.innerWidth > 900) return;
                 document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 document.getElementById(tabId).classList.add('active');
@@ -908,125 +790,83 @@
             }
 
             function handleResize() {
-                if(window.innerWidth > 900) document.querySelectorAll('.tab-content').forEach(t => t.style.display = ''); 
+                if(window.innerWidth > 900) document.querySelectorAll('.tab-content').forEach(t => t.style.display = '');
             }
 
-            function toggleTheme() { 
-                document.body.classList.toggle("dark-mode"); 
-                let isDark = document.body.classList.contains('dark-mode');
-                safeSetStore('theme', isDark ? 'dark' : 'light');
+            function toggleTheme() {
+                document.body.classList.toggle("dark-mode");
+                safeSetStore('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
                 updateThemeBtnText();
             }
-            
+
             function updateThemeBtnText() {
                 document.getElementById("themeBtn").innerText = document.body.classList.contains('dark-mode') ? "☀️ 라이트모드" : "🌙 다크모드";
             }
 
             let searchTimeout = null;
-            function debouncedApplyFilters() {
-                if (searchTimeout) clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => { applyFilters(); }, 300);
-            }
+            function debouncedApplyFilters() { clearTimeout(searchTimeout); searchTimeout = setTimeout(applyFilters, 300); }
 
             function calculateAndRenderStatsOnly() {
-                let sCnt=0, fCnt=0, waitCnt=0, sumProfit=0, sumLoss=0, currStreakW=0, maxStreakW=0, currStreakL=0, maxStreakL=0;
-                let peakEq = 10000000, currEq = 10000000, mdd = 0;
-
+                let sCnt=0, fCnt=0, waitCnt=0, sumProfit=0, sumLoss=0, currStreakW=0, maxStreakW=0, currStreakL=0, maxStreakL=0, peakEq=10000000, currEq=10000000, mdd=0;
                 for(let i=0; i<rawData.length; i++) {
                     let d = rawData[i];
                     if(d.result === '대기') { waitCnt++; continue; }
                     let actualPct = Math.abs(d.change_pct_val);
-                    if(d.result === '성공') {
-                        sCnt++; sumProfit += actualPct; currStreakW++; currStreakL=0; 
-                        if(currStreakW > maxStreakW) maxStreakW = currStreakW;
-                        currEq *= (1 + actualPct);
-                    } else if (d.result === '실패') {
-                        fCnt++; sumLoss += actualPct; currStreakL++; currStreakW=0; 
-                        if(currStreakL > maxStreakL) maxStreakL = currStreakL;
-                        currEq *= (1 - actualPct);
-                    }
-                    if(currEq > peakEq) peakEq = currEq;
-                    let drop = (peakEq - currEq) / peakEq * 100;
-                    if(drop > mdd) mdd = drop;
+                    if(d.result === '성공') { sCnt++; sumProfit += actualPct; currStreakW++; currStreakL=0; maxStreakW = Math.max(maxStreakW, currStreakW); currEq *= (1 + actualPct); }
+                    else if (d.result === '실패') { fCnt++; sumLoss += actualPct; currStreakL++; currStreakW=0; maxStreakL = Math.max(maxStreakL, currStreakL); currEq *= (1 - actualPct); }
+                    peakEq = Math.max(peakEq, currEq);
+                    mdd = Math.max(mdd, (peakEq - currEq) / peakEq * 100);
                 }
-
                 let totEval = sCnt + fCnt;
                 document.getElementById('statWinRateAI').innerText = totEval > 0 ? (sCnt / totEval * 100).toFixed(1) + "%" : "0.0%";
-                document.getElementById('statSuccessFail').innerHTML = sCnt + ' <span style="font-size:14px; color:var(--text-sub);">/ ' + fCnt + '</span>';
-                document.getElementById('statPF').innerText = sumLoss > 0 ? (sumProfit / sumLoss).toFixed(2) + "x" : (sumProfit > 0 ? "∞" : "0.0x");
-                document.getElementById('statWaitTotal').innerHTML = waitCnt + ' <span style="font-size:14px; color:var(--text-sub);">/ ' + rawData.length + '</span>';
-                document.getElementById('statStreak').innerHTML = maxStreakW + 'W <span style="font-size:14px; color:var(--text-sub);">/ ' + maxStreakL + 'L</span>';
+                document.getElementById('statSuccessFail').innerHTML = `${sCnt} / ${fCnt}`;
+                document.getElementById('statPF').innerText = sumLoss > 0 ? (sumProfit / sumLoss).toFixed(2) + "x" : "0.0x";
+                document.getElementById('statWaitTotal').innerHTML = `${waitCnt} / ${rawData.length}`;
+                document.getElementById('statStreak').innerHTML = `${maxStreakW}W / ${maxStreakL}L`;
                 document.getElementById('statMDD').innerText = "-" + mdd.toFixed(2) + "%";
             }
 
             function applyFilters() {
                 if (document.getElementById('predTableContainer').style.display === 'none') return;
-
                 const searchText = document.getElementById("searchInput").value.toUpperCase();
                 const statusVal = document.getElementById("statusFilter").value;
                 const minConf = parseInt(document.getElementById("confFilter").value);
                 const tagVal = document.getElementById("tagFilter").value;
-
                 let htmlArr = [];
                 for(let i=0; i<rawData.length; i++) {
                     let d = rawData[i];
-                    let searchContent = JSON.stringify(d).toUpperCase();
-                    
-                    let isMatch = true;
-                    if(searchText && searchContent.indexOf(searchText) === -1) isMatch = false;
-                    if(statusVal && d.status_label.indexOf(statusVal) === -1) isMatch = false;
-                    if(minConf > 0 && d.confidence < minConf) isMatch = false;
-                    if(tagVal && !d.tags.includes(tagVal)) isMatch = false;
-
-                    if (isMatch) {
-                        let status_class = "badge-wait";
-                        if(d.result === '성공') status_class = "badge-success";
-                        else if(d.result === '실패') status_class = "badge-fail";
-
-                        let thumb_html = (d.image_path && d.image_path !== '') ? `<img src='${d.image_path}' class='chart-thumb' onclick='openModal(this.src)'>` : `<span style='color:var(--text-sub); font-size:10px;'>TEXT</span>`;
-                        let tags_html = d.tags.map(t => `<span class='tag'>${t}</span>`).join('');
-                        let conf_html = `<div style='font-size:11px; color:var(--text-sub); margin-top:6px;'>신뢰도: ${d.confidence}%<div class='conf-bar-bg'><div class='conf-bar-fill' style='width:${d.confidence}%'></div></div></div>`;
-                        
-                        let tracker_html = "";
-                        if(d.actual_price !== '대기 중') {
-                            if(d.max_high) tracker_html += `<div style='font-size:11px; color:#f59e0b; margin-top:4px;'>MFE (최고): ${d.max_high} (${d.mfe_pct})</div>`;
-                            if(d.min_low) tracker_html += `<div style='font-size:11px; color:#ef4444; margin-top:2px;'>MAE (최저): ${d.min_low} (${d.mae_pct})</div>`;
-                        }
-                        
-                        let reason_html = d.reason ? `<div style='font-size:11px; color:var(--text-sub); margin-top:4px; max-height:40px; overflow:hidden; text-overflow:ellipsis;'>${d.reason}</div>` : "";
-
-                        htmlArr.push(`<tr data-stock="${d.stock}">
-                            <td><span class="pin-btn" onclick="togglePin(this, '${d.stock}')">★</span></td>
-                            <td>${thumb_html}</td>
-                            <td style="color: var(--text-sub); white-space: nowrap;">${d.request_time}</td>
-                            <td><span class="stock-name">${d.stock}</span><div>${tags_html}</div></td>
-                            <td style="white-space: nowrap;">${d.current_price}</td>
-                            <td><strong style="color: #ef4444;">종가: ${d.target_price} (${d.change_pct})</strong><br><span style="font-size:12px;">${d.target}</span>${conf_html}${reason_html}<div id="hidden_reason_${d.id}" style="display:none;">${d.reason}</div></td>
-                            <td style="white-space: nowrap;"><strong>${d.actual_price}</strong>${tracker_html}</td>
-                            <td style="white-space: nowrap; text-align:center;"><span class="badge ${status_class}" style="display:block; margin-bottom:8px;">${d.status_label}</span><button class="btn-detail" onclick="openDetailModal(${d.id}, '${d.stock}', '${d.image_path}', '${d.target_price} (${d.change_pct})', '${d.actual_price}', '${d.status_label}')">🔍 상세 복기</button></td>
-                        </tr>`);
-                    }
+                    if(searchText && JSON.stringify(d).toUpperCase().indexOf(searchText) === -1) continue;
+                    if(statusVal && d.status_label.indexOf(statusVal) === -1) continue;
+                    if(minConf > 0 && d.confidence < minConf) continue;
+                    if(tagVal && !d.tags.includes(tagVal)) continue;
+                    htmlArr.push(`<tr>
+                        <td>★</td>
+                        <td>TEXT</td>
+                        <td>${d.request_time}</td>
+                        <td><strong>${d.stock}</strong></td>
+                        <td>${d.current_price}</td>
+                        <td><strong>${d.target_price} (${d.change_pct})</strong></td>
+                        <td><strong>${d.actual_price}</strong></td>
+                        <td>${d.status_label}</td>
+                    </tr>`);
                 }
-
                 document.getElementById('predTableBody').innerHTML = htmlArr.join('');
-                sortPinnedToTop();
             }
 
-            function initPins() { let p = JSON.parse(safeGetStore('pinnedStocks') || '[]'); document.querySelectorAll('.pin-btn').forEach(b => { if(p.includes(b.parentElement.parentElement.getAttribute('data-stock'))) b.classList.add('active'); }); sortPinnedToTop(); }
-            function togglePin(btn, stock) { let p = JSON.parse(safeGetStore('pinnedStocks') || '[]'); if(p.includes(stock)) { p = p.filter(s => s !== stock); btn.classList.remove('active'); } else { p.push(stock); btn.classList.add('active'); } safeSetStore('pinnedStocks', JSON.stringify(p)); sortPinnedToTop(); }
-            function sortPinnedToTop() { const t = document.getElementById("predTable").querySelector("tbody"); const rows = Array.from(t.querySelectorAll("tr")); rows.sort((a,b) => (b.querySelector('.pin-btn').classList.contains('active')?1:0) - (a.querySelector('.pin-btn').classList.contains('active')?1:0)); rows.forEach(r => t.appendChild(r)); }
             function openModal(src) { document.getElementById("imgModal").style.display = "flex"; document.getElementById("modalImg").src = src; }
             function closeModal() { document.getElementById("imgModal").style.display = "none"; }
-            function openDetailModal(id, stock, imgPath, target, actual, status) {
-                document.getElementById("detailTitle").innerText = "📋 " + stock + " 매매 복기 일지";
-                document.getElementById("detailTarget").innerText = target; document.getElementById("detailActual").innerText = actual;
-                const b = document.getElementById("detailStatusBadge"); b.innerText = status; b.className = "badge " + (status.includes("성공") ? "badge-success" : (status.includes("실패") ? "badge-fail" : "badge-wait"));
-                const img = document.getElementById("detailImg"); if(imgPath) { img.src = imgPath; img.style.display = "block"; } else img.style.display = "none";
-                document.getElementById("detailReason").innerHTML = document.getElementById("hidden_reason_" + id).innerHTML;
-                document.getElementById("detailModal").style.display = "flex";
-            }
             function closeDetailModal() { document.getElementById("detailModal").style.display = "none"; }
-            function exportToCSV() { let csv = []; document.querySelectorAll("table tr").forEach(r => { let row = []; r.querySelectorAll("td, th").forEach((c, i) => { if(i>0) row.push('"' + c.innerText.replace(/\n/g, " ") + '"'); }); csv.push(row.join(",")); }); let a = document.createElement("a"); a.href = window.URL.createObjectURL(new Blob(["\uFEFF" + csv.join("\n")], {type: "text/csv;charset=utf-8;"})); a.download = "quant_dashboard.csv"; a.click(); }
+            function exportToCSV() {
+                let csv = [];
+                document.querySelectorAll("table tr").forEach(r => {
+                    let row = [];
+                    r.querySelectorAll("td, th").forEach(c => row.push('"' + c.innerText.replace(/\n/g, " ") + '"'));
+                    csv.push(row.join(","));
+                });
+                let a = document.createElement("a");
+                a.href = window.URL.createObjectURL(new Blob(["\uFEFF" + csv.join("\n")], {type: "text/csv;charset=utf-8;"}));
+                a.download = "quant_dashboard.csv"; a.click();
+            }
         </script>
     </body>
     </html>
